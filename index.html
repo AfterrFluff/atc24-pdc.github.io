@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+    <head>
+        <title>ATC24 PDC - ACARS</title>
+        <link rel="icon" href="img/urlicon.png">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    
+    <body>
+        <header>
+            <h1>ATC24 Predeparture Clearance</h1>
+        </header>
+        
+        <label for="dataInput"><b>Enter Flight Plan</b></label>
+        <textarea id="dataInput" rows="10" cols="10"></textarea>
+        <label for="groundFreqInput"><b>Ground Frequency:</b></label>
+        <input type="text" id="groundFreqInput">
+        <label for="depFreqInput"><b>Departure Frequency:</b></label>
+        <input type="text" id="depFreqInput">
+        <button id="generateButton">Generate PDC</button>
+        <div id="outputResult"></div>
+        <script src="script.js"></script>
+    </body>
+</html>

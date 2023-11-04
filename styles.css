@@ -1,0 +1,60 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #2B2D42; /* Dark background */
+    color: #F5F5F5; /* Light text color */
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    padding: 10px 0; /* Decrease padding for a less spaced out look */
+}
+
+h1 {
+    text-align: center;
+    color: #FF8C42; /* Orange title color */
+    font-size: 28px;
+    margin: 0;
+}
+
+#dataInput, #groundFreqInput, #depFreqInput {
+    width: 98%;
+    padding: 15px;
+    margin: 10px 0;
+    font-size: 18px;
+    border: none; /* Removed border */
+    border-radius: 10px;
+    resize: vertical;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #1D1F30; /* Slightly darker input background */
+    color: #F5F5F5; /* Light text color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#dataInput:focus, #groundFreqInput:focus, #depFreqInput:focus {
+    background-color: #0F111D; /* Even darker input background on focus */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+#generateButton {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #FF8C42; /* Orange button background */
+    color: #F5F5F5; /* Light text color */
+    border: none; /* Removed border */
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 10px 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#generateButton:hover {
+    background-color: #E06D1B; /* Slightly darker animation color on hover */
+}
