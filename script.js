@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (groundFreq == "") {
             groundFreq = depFreq;
-            return depFreq
         }
 
         if (callsign && departingValue && arrivingValue && routeValue && flightLevelValue) {
