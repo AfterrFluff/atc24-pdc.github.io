@@ -56,6 +56,17 @@ h1 {
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: #2B2D42; /* Background color of the footer */
+    color: #F5F5F5; /* Text color of the footer */
+    padding: 10px;
+}
+
 #generateButton:hover {
     background-color: #E06D1B; /* Slightly darker animation color on hover */
 }
