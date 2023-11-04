@@ -43,8 +43,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return "No departure frequency retrieved, please enter valid frequencies.";
         }
 
-        if (groundFreq === "" && !depFreq === "") {
+        if (groundFreq == "") {
             groundFreq = depFreq;
+            return depFreq
         }
 
         if (callsign && departingValue && arrivingValue && routeValue && flightLevelValue) {
