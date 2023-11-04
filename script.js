@@ -39,8 +39,12 @@ document.addEventListener('DOMContentLoaded', function () {
             return "Flight plan not entered, please enter a correct flight plan in the right format from ATC24.";
         }
     
-        if (groundFreq === "" || depFreq === "") {
-            return "Empty frequencies retrieved, please enter valid frequencies.";
+        if (depFreq === "") {
+            return "No departure frequency retrieved, please enter valid frequencies.";
+        }
+
+        if (groundFreq === "" && !depFreq === "") {
+            groundFreq = depFreq;
         }
 
         if (callsign && departingValue && arrivingValue && routeValue && flightLevelValue) {
