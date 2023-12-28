@@ -3,18 +3,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const groundFreqInput = document.getElementById('groundFreqInput');
     const depFreqInput = document.getElementById('depFreqInput');
     const generateButton = document.getElementById('generateButton');
+    const generateSquawkBtn = document.getElementById('generateSquawkBtn')
     const outputResult = document.getElementById('outputResult');
+    const outputSquawkResult = document.getElementById('outputSquawkResult');
 
     generateButton.addEventListener('click', function () {
         const inputData = dataInput.value;
         const depFreq = depFreqInput.value;
         const groundFreq = groundFreqInput.value;
 
-
         // Generate IFR PDC based on user input and display the result.
         const generatedIFR = generateIFRFromInput(inputData, depFreq, groundFreq);
         outputResult.textContent = generatedIFR;
     }); 
+
+    generateSquawkBtn.addEventListener('click', function() {
+        const generatedSquawk = generateSquawk();
+        outputSquawkResult.textContent = generatedSquawk;
+    })
+
+    function generateSquawk() {
+        let squawk = "";
+    
+        for (let i = 0; i < 4; i++) {
+            squawk += String(Math.floor(Math.random() * 8));
+        }
+    
+        return squawk;
+    }
 
     function generateIFRFromInput(inputData, depFreq, groundFreq) {
         const lines = inputData.split('\n');
@@ -45,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (groundFreq == "") {
             groundFreq = depFreq;
+            return depFreq
         }
 
         if (callsign && departingValue && arrivingValue && routeValue && flightLevelValue) {
