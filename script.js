@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const groundFreqInput = document.getElementById('groundFreqInput');
     const depFreqInput = document.getElementById('depFreqInput');
     const generateButton = document.getElementById('generateButton');
-    const generateSquawkBtn = document.getElementById('generateSquawkBtn')
+    const generateSquawkBtn = document.getElementById('generateSquawkBtn');
     const outputResult = document.getElementById('outputResult');
     const outputSquawkResult = document.getElementById('outputSquawkResult');
 
@@ -15,26 +15,33 @@ document.addEventListener('DOMContentLoaded', function () {
         // Generate IFR PDC based on user input and display the result.
         const generatedIFR = generateIFRFromInput(inputData, depFreq, groundFreq);
         outputResult.textContent = generatedIFR;
-    }); 
+    });
 
     generateSquawkBtn.addEventListener('click', function() {
         const generatedSquawk = generateSquawk();
         outputSquawkResult.textContent = generatedSquawk;
-    })
+    });
 
     function generateSquawk() {
         let squawk = "";
-    
         for (let i = 0; i < 4; i++) {
             squawk += String(Math.floor(Math.random() * 8));
         }
-    
         return squawk;
+    }
+
+    function extractSID(route) {
+        // Regular expression to match SID patterns (letters followed by digits)
+        const sidPattern = /\b[A-Z]+\d[A-Z]*\b/g;
+        let match = sidPattern.exec(route);
+
+        // Return the first match found, or null if no match is found
+        return match ? match[0] : null;
     }
 
     function generateIFRFromInput(inputData, depFreq, groundFreq) {
         const lines = inputData.split('\n');
-    
+
         // Extract relevant information from lines
         const preCallsign = lines.find(line => line.includes('Callsign:'));
         const aircraft = lines.find(line => line.includes('Aircraft:'));
@@ -42,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const arriving = lines.find(line => line.includes('Arriving:'));
         const route = lines.find(line => line.includes('Route:'));
         const flightLevel = lines.find(line => line.includes('Flight Level:'));
-    
+
         // Extract the actual values
         const callsign = preCallsign ? preCallsign.split(': ')[1] : '';
         const aircraftValue = aircraft ? aircraft.split(': ')[1] : '';
@@ -51,33 +58,44 @@ document.addEventListener('DOMContentLoaded', function () {
         const routeValue = route ? route.split(': ')[1] : '';
         const flightLevelValue = flightLevel ? flightLevel.split(': ')[1] : '';
 
-        if (inputData === "") {
+        if (!inputData || inputData.trim() === "") {
             return "Flight plan not entered, please enter a correct flight plan in the right format from ATC24.";
         }
-    
-        if (depFreq === "") {
-            return "No departure frequency retrieved, please enter valid frequencies.";
+
+        if (!depFreq || isNaN(depFreq)) {
+            return "No valid departure frequency retrieved, please enter valid frequencies.";
         }
 
-        if (groundFreq == "") {
+        if (!groundFreq || isNaN(groundFreq)) {
             groundFreq = depFreq;
-            return depFreq
         }
 
         if (callsign && departingValue && arrivingValue && routeValue && flightLevelValue) {
-            const initialAltitude = `${Math.floor(Math.random() * 2) + 1},000`;
-            const afterInitial = parseFloat(flightLevelValue);
+            let initialAltitude = `${Math.floor(Math.random() * 2) + 1},000`.toString().padStart(3, '0');
+            const afterInitial = parseFloat(flightLevelValue).toString().padStart(3, '0');
             const transponder = `${Math.floor(Math.random() * 8)}${Math.floor(Math.random() * 8)}${Math.floor(Math.random() * 8)}${Math.floor(Math.random() * 8)}`;
-    
-            let routeText = routeValue;
-            if (routeText === "N/A" || routeText.toLowerCase() === "gps direct") {
-                routeText = "DCT";
+
+            let routeText = routeValue.toUpperCase();
+
+            // Checking for SIDs
+            let sid = extractSID(routeText);
+            if (sid) {
+                routeText = sid;
+                let ifr = `ACARS: PDC | CALLSIGN: ${callsign} | EQUIPMENT: ${aircraftValue} | DEPARTURE: ${departingValue} | DESTINATION: ${arrivingValue} | ROUTE: ${routeText} | ALTITUDE: ${afterInitial} | SQUAWK: ${transponder} | REMARKS: CLEARED ${routeText} DEPARTURE CLIMB VIA SID EXP ${afterInitial} 10 MIN AFT DP, DPFRQ ${depFreq} CTC ${groundFreq} TO PUSH`;
+                return ifr.toUpperCase();
             }
 
-            let ifr = `ACARS: PDC | CALLSIGN: ${callsign} | EQUIPMENT: ${aircraftValue} | DEPARTURE: ${departingValue} | DESTINATION: ${arrivingValue} | ROUTE: ${routeText} | ALTITUDE: ${afterInitial} | SQUAWK: ${transponder} | REMARKS: CLEARED ${routeText} INITIAL ${initialAltitude} EXP FL${afterInitial} 10 MIN AFT DP, DPFRQ ${depFreq} CTC ${groundFreq} TO PUSH`;
-            return ifr.toUpperCase();
+            // Checking for GPS Direct
+            if (routeText === "N/A" || routeText.toLowerCase().includes("gps") || routeText.toLowerCase().includes("gps-direct") || routeText.toLowerCase().includes("dct") || routeText.toLowerCase().includes("direct")) {
+                routeText = "DCT";
+                let ifr = `ACARS: PDC | CALLSIGN: ${callsign} | EQUIPMENT: ${aircraftValue} | DEPARTURE: ${departingValue} | DESTINATION: ${arrivingValue} | ROUTE: ${routeText} | ALTITUDE: ${afterInitial} | SQUAWK: ${transponder} | REMARKS: CLEARED ${routeText} INITIAL ${initialAltitude} EXP FL${afterInitial} 10 MIN AFT DP, DPFRQ ${depFreq} CTC ${groundFreq} TO PUSH`;
+                return ifr.toUpperCase();
+            }
+            
+            // Default message if SID and GPS Direct not found
+            return `ACARS: PDC | CALLSIGN: ${callsign} | EQUIPMENT: ${aircraftValue} | DEPARTURE: ${departingValue} | DESTINATION: ${arrivingValue} | ROUTE: ${routeText} | ALTITUDE: ${afterInitial} | SQUAWK: ${transponder} | REMARKS: CLEARED RNV ${routeText} INITIAL ${initialAltitude} EXP FL${afterInitial} 10 MIN AFT DP, DPFRQ ${depFreq} CTC ${groundFreq} TO PUSH`;
         } else {
-            return `Missing data from your input:\n${inputData}`;
+            return `We've received invalid data from your input:\n\n${inputData}`;
         }
     }
 });
