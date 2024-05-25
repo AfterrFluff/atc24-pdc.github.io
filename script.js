@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const transponder = `${Math.floor(Math.random() * 8)}${Math.floor(Math.random() * 8)}${Math.floor(Math.random() * 8)}${Math.floor(Math.random() * 8)}`;
 
             let routeText = routeValue.toUpperCase();
+            const fixedRte = routeText;
 
             // Checking for SIDs
             let sid = extractSID(routeText);
@@ -88,12 +89,12 @@ document.addEventListener('DOMContentLoaded', function () {
             // Checking for GPS Direct
             if (routeText === "N/A" || routeText.toLowerCase().includes("gps") || routeText.toLowerCase().includes("gps-direct") || routeText.toLowerCase().includes("dct") || routeText.toLowerCase().includes("direct")) {
                 routeText = "DCT";
-                let ifr = `ACARS: PDC | CALLSIGN: ${callsign} | EQUIPMENT: ${aircraftValue} | DEPARTURE: ${departingValue} | DESTINATION: ${arrivingValue} | ROUTE: ${routeText} | ALTITUDE: ${afterInitial} | SQUAWK: ${transponder} | REMARKS: CLEARED ${routeText} INITIAL ${initialAltitude} EXP FL${afterInitial} 10 MIN AFT DP, DPFRQ ${depFreq} CTC ${groundFreq} TO PUSH`;
+                let ifr = `ACARS: PDC | CALLSIGN: ${callsign} | EQUIPMENT: ${aircraftValue} | DEPARTURE: ${departingValue} | DESTINATION: ${arrivingValue} | ROUTE: ${fixedRte} | ALTITUDE: ${afterInitial} | SQUAWK: ${transponder} | REMARKS: CLEARED ${routeText} INITIAL ${initialAltitude} EXP FL${afterInitial} 10 MIN AFT DP, DPFRQ ${depFreq} CTC ${groundFreq} TO PUSH`;
                 return ifr.toUpperCase();
             }
             
             // Default message if SID and GPS Direct not found
-            return `ACARS: PDC | CALLSIGN: ${callsign} | EQUIPMENT: ${aircraftValue} | DEPARTURE: ${departingValue} | DESTINATION: ${arrivingValue} | ROUTE: ${routeText} | ALTITUDE: ${afterInitial} | SQUAWK: ${transponder} | REMARKS: CLEARED RNV ${routeText} INITIAL ${initialAltitude} EXP FL${afterInitial} 10 MIN AFT DP, DPFRQ ${depFreq} CTC ${groundFreq} TO PUSH`;
+            return `ACARS: PDC | CALLSIGN: ${callsign} | EQUIPMENT: ${aircraftValue} | DEPARTURE: ${departingValue} | DESTINATION: ${arrivingValue} | ROUTE: ${fixedRte} | ALTITUDE: ${afterInitial} | SQUAWK: ${transponder} | REMARKS: CLEARED RNV ${routeText} INITIAL ${initialAltitude} EXP FL${afterInitial} 10 MIN AFT DP, DPFRQ ${depFreq} CTC ${groundFreq} TO PUSH`;
         } else {
             return `We've received invalid data from your input:\n\n${inputData}`;
         }
